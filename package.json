@@ -1,0 +1,17 @@
+{
+  "name": "erp_backend",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "aws-sdk": "latest",
+    "body-parser": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "koa": "^2.11.0",
+    "mysql": "^2.18.1",
+    "node-mysql-admin": "^0.1.8"
+  },
+  "scripts": {
+    "start": "node app.js"
+  }
+}
