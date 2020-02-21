@@ -28,7 +28,15 @@ appKoa.use(convert(function *(next) {
 app.use(mysqlAdmin(app));
 
 app.get('/quotationCount', (req, res) => {
-    res.send('GET request to the homepage')
+    connection.query('select * from erp.Customer', (err, rows, fields) => {
+        // connection.end();
+        if(!err) {
+            res.send(rows)
+        } else {
+            console.log(err);
+            
+        }
+    })
 })
 
 app.listen(3333);
