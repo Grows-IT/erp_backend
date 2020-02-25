@@ -1,14 +1,21 @@
 var express = require('express');
-
 var app = express();
 var connection  = require('./db');
 var mysqlAdmin = require('node-mysql-admin');
 var router = express.Router();
+var customer = require('./customer.js');
 var invoice = require('./invoice.js');
 var Koa = require('koa');
 const convert = require('koa-convert');
 const appKoa = module.exports = new Koa();
 const expressApp = express();
+var bodyParser = require('body-parser')
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 module.exports = router;
 expressApp.use(mysqlAdmin(expressApp));
@@ -52,6 +59,7 @@ app.use(function(req, res, next) {
   });
 
 app.use(invoice);
+app.use(customer);
 
 app.get('/quotationCount', function(req, res, next) {
     connection.query('select * from erp.Quotation', (err, rows, fields) => {
