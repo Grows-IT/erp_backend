@@ -34,9 +34,12 @@ app.get('/quotationCount', (req, res) => {
             res.send(rows)
         } else {
             console.log(err);
-            
         }
     })
+})
+
+app.get('/getQuotation', (req, res) => {
+    connection.query('select')
 })
 
 app.listen(3333);
