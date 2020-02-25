@@ -58,4 +58,8 @@ app.get('/quotationCount', function(req, res, next) {
 //     })
 // })
 
+app.get('/getQuotation', (req, res) => {
+    connection.query('select')
+})
+
 app.listen(3333);
