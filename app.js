@@ -27,16 +27,35 @@ appKoa.use(convert(function *(next) {
 
 app.use(mysqlAdmin(app));
 
-app.get('/quotationCount', (req, res) => {
-    connection.query('select * from erp.Customer', (err, rows, fields) => {
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+app.get('/quotationCount', function(req, res, next) {
+    connection.query('select * from erp.Quotation', (err, rows, fields) => {
         // connection.end();
         if(!err) {
             res.send(rows)
+            console.log(rows);
         } else {
-            console.log(err);
-            
+            console.log(err); 
         }
     })
-})
+    // Handle the get for this route
+  });
+
+// app.post('/quotationCount', (req, res) => {
+//     connection.query('alter table erp.Invoices add createReceiptDate Date', (err, rows, fields) => {
+//         // connection.end();
+//         if(!err) {
+//             res.send(rows)
+//         } else {
+//             console.log(err);
+            
+//         }
+//     })
+// })
 
 app.listen(3333);

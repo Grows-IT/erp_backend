@@ -6,10 +6,11 @@
     "aws-sdk": "latest",
     "body-parser": "latest",
     "ejs": "latest",
-    "express": "latest",
+    "express": "^4.17.1",
     "koa": "^2.11.0",
     "mysql": "^2.18.1",
-    "node-mysql-admin": "^0.1.8"
+    "node-mysql-admin": "^0.1.8",
+    "nodemon": "^2.0.2"
   },
   "scripts": {
     "start": "node app.js"
