@@ -5,6 +5,9 @@ var mysqlAdmin = require('node-mysql-admin');
 var router = express.Router();
 var customer = require('./customer.js');
 var invoice = require('./invoice.js');
+var items = require('./items.js');
+var users = require('./users.js');
+var department = require('./department.js');
 var Koa = require('koa');
 const convert = require('koa-convert');
 const appKoa = module.exports = new Koa();
@@ -54,12 +57,16 @@ app.use(mysqlAdmin(app));
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Methods", "GET, PATCH, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
 
 app.use(invoice);
 app.use(customer);
+app.use(items);
+// app.use(users);
+app.use(department);
 
 app.get('/quotationCount', function(req, res, next) {
     connection.query('select * from erp.Quotation', (err, rows, fields) => {

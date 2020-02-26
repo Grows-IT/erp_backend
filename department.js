@@ -3,9 +3,9 @@ var app = express();
 var connection = require("./db");
 const router = express.Router();
 
-router.route('/customer')
+router.route('/department')
   .get(function (req,res){
-    connection.query("select * from erp.Customer", (err, rows, fields) => {
+    connection.query("select * from erp.Department", (err, rows, fields) => {
           // connection.end();
           if (!err) {
             res.send(rows)
@@ -17,9 +17,9 @@ router.route('/customer')
         });
   })
   .post(function (req,res){
-    var name = req.body.name;
-    var address = req.body.address;
-    connection.query("insert into erp.Customer (customerName, address) values (?,?)",[name, address], function (err, rows, fields) {
+    var position = req.body.position;
+    var department = req.body.department;
+    connection.query("insert into erp.Department (position, department) values (?,?)",[position, department], function (err, rows, fields) {
           // connection.end();
           if (!err) {
             res.send(rows);
@@ -31,12 +31,11 @@ router.route('/customer')
   })
 
   .patch(function (req,res){
-      var name= req.body.name;
-      var address = req.body.address;
-      var cusId = req.body.cusId;
-      console.log(req.body);
+    var departmentId = req.body.departmentId;
+    var position = req.body.position;
+    var department = req.body.department;
       
-    connection.query("update erp.Customer set customerName = ?, address = ? where customerId = ?",[name,address,cusId], function (err, rows, fields) {
+    connection.query("update erp.Department set position = ?, department = ? where departmentId = ?",[position,department,departmentId], function (err, rows, fields) {
           // connection.end();
           if (!err) {
             res.send(rows);
@@ -47,11 +46,11 @@ router.route('/customer')
         });
   })
 
-  router.route('/deletecustomer')
+  router.route('/deletedepartment')
   .post(function (req,res){      
     console.log(req.body.cusId);
-    var cusId = req.body.cusId;    
-    connection.query("delete from erp.Customer where customerId = ?",[cusId], function (err, rows, fields) {
+    var departmentId = req.body.departmentId;    
+    connection.query("delete from erp.Department where departmentId = ?",[departmentId], function (err, rows, fields) {
         // connection.end();
         if (!err) {
           res.send(rows);
