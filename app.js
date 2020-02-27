@@ -73,7 +73,7 @@ app.use(customer);
 app.use(signin);
 app.use(quotation);
 app.use(items);
-app.use(users);
+// app.use(users);
 app.use(department);
 
 app.get('/quotationCount', function (req, res, next) {
