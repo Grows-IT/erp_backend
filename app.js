@@ -1,15 +1,18 @@
 var express = require('express');
 var app = express();
-var connection  = require('./db');
+var connection = require('./db');
 var mysqlAdmin = require('node-mysql-admin');
+var customer = require('./customer');
+var invoice = require('./invoice');
+var signin = require('./signin')
+var quotation = require('./quotation')
 var router = express.Router();
-var customer = require('./customer.js');
-var invoice = require('./invoice.js');
 var Koa = require('koa');
 const convert = require('koa-convert');
+const bodyParser = require('body-parser')
+
 const appKoa = module.exports = new Koa();
 const expressApp = express();
-var bodyParser = require('body-parser')
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -19,7 +22,7 @@ app.use(bodyParser.json())
 
 module.exports = router;
 expressApp.use(mysqlAdmin(expressApp));
-appKoa.use(convert(function *(next) {
+appKoa.use(convert(function* (next) {
     // do routing by simple matching, koa-route may also work
     if (this.path.startsWith('/myadmin')) {
         // direct to express
@@ -52,27 +55,31 @@ app.use(mysqlAdmin(app));
 //     // Handle the get for this route
 //   });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, PATCH, POST, PUT, DELETE, OPTIONS");
+    res.header('Content-Type: application/json');
     next();
-  });
+});
 
 app.use(invoice);
 app.use(customer);
+app.use(signin);
+app.use(quotation);
 
-app.get('/quotationCount', function(req, res, next) {
+app.get('/quotationCount', function (req, res, next) {
     connection.query('select * from erp.Quotation', (err, rows, fields) => {
         // connection.end();
-        if(!err) {
+        if (!err) {
             res.send(rows)
             console.log(rows);
         } else {
-            console.log(err); 
+            console.log(err);
         }
     })
     // Handle the get for this route
-  });
+});
 
 // app.post('/quotationCount', (req, res) => {
 //     connection.query('alter table erp.Invoices add createReceiptDate Date', (err, rows, fields) => {
@@ -81,7 +88,7 @@ app.get('/quotationCount', function(req, res, next) {
 //             res.send(rows)
 //         } else {
 //             console.log(err);
-            
+
 //         }
 //     })
 // })
