@@ -6,6 +6,10 @@ var customer = require('./customer');
 var invoice = require('./invoice');
 var signin = require('./signin')
 var quotation = require('./quotation')
+var items = require('./items');
+var users = require('./users');
+var department = require('./department');
+
 var router = express.Router();
 var Koa = require('koa');
 const convert = require('koa-convert');
@@ -57,6 +61,7 @@ app.use(mysqlAdmin(app));
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Methods", "GET, PATCH, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET, PATCH, POST, PUT, DELETE, OPTIONS");
     res.header('Content-Type: application/json');
@@ -67,6 +72,9 @@ app.use(invoice);
 app.use(customer);
 app.use(signin);
 app.use(quotation);
+app.use(items);
+app.use(users);
+app.use(department);
 
 app.get('/quotationCount', function (req, res, next) {
     connection.query('select * from erp.Quotation', (err, rows, fields) => {
