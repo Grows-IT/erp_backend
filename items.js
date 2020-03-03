@@ -60,4 +60,18 @@ router.route('/items')
         });
   })
 
+  router.route('/sellItem')
+    .get(function (req,res){      
+      var itemId = req.body.itemId;    
+      connection.query("select * from erp.SellItems", function (err, rows, fields) {
+          // connection.end();
+          if (!err) {
+            res.send(rows);
+            console.log(rows);
+          } else {
+            console.log(err);
+          }
+        });
+  })
+
   module.exports = router;
