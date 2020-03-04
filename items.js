@@ -20,7 +20,7 @@ router.route('/items')
     var name = req.body.name;
     var price = req.body.price;
     var availableQuantity = req.body.availableQuantity;
-    connection.query("insert into erp.Items (name, availableQuantity, price) values (?, ?, ?)", [name, availableQuantity, price], function (err, rows, fields) {
+    connection.query("insert into erp.Items (itemName, availableQuantity, price) values (?, ?, ?)", [name, availableQuantity, price], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);
@@ -35,7 +35,7 @@ router.route('/items')
     var price = req.body.price;
     var availableQuantity = req.body.availableQuantity;
     var itemId = req.body.itemId;
-    connection.query("update erp.Items set name = ?, availableQuantity = ?, price = ? where itemId = ?", [name, availableQuantity, price, itemId], function (err, rows, fields) {
+    connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ? where itemId = ?", [name, availableQuantity, price, itemId], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);
