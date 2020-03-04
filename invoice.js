@@ -5,10 +5,11 @@ const router = express.Router();
 
 router.route('/invoice')
   .get((req, res) => {
-    connection.query('select * from erp.Quotation, erp.Invoices, erp.Customer, erp.SellItems, erp.Items, erp.SubInvoices, erp.InvoiceGroup, erp.User, erp.Company where Quotation.quotationId = Invoices.quotationId and Invoices.customerId = Customer.customerId and Invoices.sellItemId = SellItems.sellItemId and Invoices.invoiceGroupId = InvoiceGroup.invoiceGroupId and Quotation.sellItemId = SellItems.sellItemId and SellItems.sellItemId = SubInvoices.subInvoicesId and SubInvoices.sellItems = Items.itemId and Invoices.userId = User.userId and Invoices.companyId = Company.companyId', (err, rows, fields) => {
+    // connection.query('select * from erp.Quotation, erp.Invoices, erp.Customer, erp.SellItems, erp.Items, erp.SubInvoices, erp.InvoiceGroup, erp.User, erp.Company where Quotation.quotationId = Invoices.quotationId and Invoices.customerId = Customer.customerId and Invoices.sellItemId = SellItems.sellItemId and Invoices.invoiceGroupId = InvoiceGroup.invoiceGroupId and Quotation.sellItemId = SellItems.sellItemId and SellItems.sellItemId = SubInvoices.subInvoicesId and SubInvoices.sellItems = Items.itemId and Invoices.userId = User.userId and Invoices.companyId = Company.companyId', (err, rows, fields) => {
+    connection.query('select i.invoiceId, q.quotationId, c.customerId, c.customerName, c.address, i.sellItemId, i.invoiceStatus, i.creator, i.createReceiptDate, q.date from erp.Quotation q, erp.Invoices i, erp.Customer c where q.quotationId = i.quotationId and i.customerId = c.customerId', (err, rows, fields) => {
       if (!err) {
         res.send(rows);
-        // console.log(rows);
+        console.log(rows);
         return rows;
       } else {
         console.log(err);
@@ -16,11 +17,12 @@ router.route('/invoice')
     })
   })
   .post((req, res) => {
-    connection.query('select * from erp.Invoices', (err, rows, fields) => {
+    // console.log(req.body);
+    connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator) values (?, ?, ?, ?, ?, ?, ?)', [req.body.customerId, req.body.sellItemId, req.body.quotationId, req.body.userId, req.body.companyId, req.body.status, req.body.email], (err, rows, fields) => {
       // connection.end();
       if (!err) {
         res.send(rows);
-        console.log(rows);
+        // console.log(rows);c
       } else {
         console.log(err);
       }

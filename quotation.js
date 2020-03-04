@@ -5,11 +5,11 @@ const router = express.Router();
 
 router.route('/quotation')
   .get((req, res) => {
-    connection.query('select s.sellQuantity, s.itemId, q.quotationStatus,c.customerId,s.sellItemId,u.userId,u.companyId,u.email,q.quotationId,q.date,q.expirationDate from erp.Quotation q, erp.Customer c, erp.User u, erp.SellItems s, erp.Items i where q.customerId = c.customerId and q.userId = u.userId and q.sellItemId = s.sellitemId and s.itemId = i.itemId', (err, rows, fields) => {
+    connection.query('select s.sellQuantity, s.itemId, q.quotationStatus,c.customerId, s.sellItemId, u.userId, u.companyId, u.email, q.quotationId,q.date, q.expirationDate, q.invoiceId from erp.Quotation q, erp.Customer c, erp.User u, erp.SellItems s, erp.Items i where q.customerId = c.customerId and q.userId = u.userId and q.sellItemId = s.sellitemId and s.itemId = i.itemId', (err, rows, fields) => {
       if (err) {
         return console.log(err)
       } else {
-        console.log(rows);
+        // console.log(rows);
         res.send(rows);
       }
     })
@@ -56,11 +56,26 @@ router.route('/quotation')
 router.route('/deletequotation')
   .patch(function (req, res) {
     var id = req.body.quotationId;
-    connection.query("update erp.Quotation set Quotation.quotationStatus = 'canceled' where quotationId = ?", [id], function (err, rows, fields) {
+    connection.query("update erp.Quotation set Quotation.quotationStatus = 'canceled' where quotationId = ?", [id], (err, rows, fields) => {
       // connection.end();
       if (!err) {
         res.send(rows);
         console.log(rows);
+      } else {
+        console.log(err);
+      }
+    });
+  })
+
+router.route('/updateQuotation')
+  .patch((req, res) => {
+    // console.log('update q');
+
+    // console.log(req.body);
+
+    connection.query("update erp.Quotation set Quotation.invoiceId = ? where quotationId = ?", [req.body.invoiceId, req.body.quotationId], (err, rows, fields) => {
+      if (!err) {
+        res.send(rows);
       } else {
         console.log(err);
       }
