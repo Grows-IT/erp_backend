@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.route('/department')
     .get(function (req, res) {
-        connection.query("select * from erp.Department", (err, rows, fields) => {
+        connection.query("select * from erp.Department, erp.Company", (err, rows, fields) => {
             // connection.end();
             if (!err) {
                 res.send(rows)
