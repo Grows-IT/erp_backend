@@ -20,7 +20,8 @@ router.route('/items')
     var name = req.body.name;
     var price = req.body.price;
     var availableQuantity = req.body.availableQuantity;
-    connection.query("insert into erp.Items (itemName, availableQuantity, price) values (?, ?, ?)", [name, availableQuantity, price], function (err, rows, fields) {
+    var type = req.body.type;
+    connection.query("insert into erp.Items (itemName, availableQuantity, price, itemType) values (?, ?, ?, ?)", [name, availableQuantity, price, type], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);
@@ -35,7 +36,10 @@ router.route('/items')
     var price = req.body.price;
     var availableQuantity = req.body.availableQuantity;
     var itemId = req.body.itemId;
-    connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ? where itemId = ?", [name, availableQuantity, price, itemId], function (err, rows, fields) {
+    var type = req.body.type;
+    console.log(req.body);
+    
+    connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ?, itemType = ? where itemId = ?", [name, availableQuantity, price, type, itemId], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);
@@ -59,7 +63,6 @@ router.route('/deleteitem')
       }
     });
   })
-
   router.route('/sellItem')
     .get(function (req,res){      
       var itemId = req.body.itemId;    
@@ -72,6 +75,52 @@ router.route('/deleteitem')
             console.log(err);
           }
         });
+  })
+
+  router.route('/flower')
+    .get(function (req,res){      
+      var itemId = req.body.itemId;    
+      connection.query("select * from erp.Items where Items.itemType = 'Flower'", function (err, rows, fields) {
+          // connection.end();
+          if (!err) {
+            res.send(rows);
+            console.log(rows);
+          } else {
+            console.log(err);
+          }
+        });
+  })
+  .post(function (req, res) {
+    var name = req.body.name;
+    var price = req.body.price;
+    var availableQuantity = req.body.availableQuantity;
+    connection.query("insert into erp.Items (itemName, availableQuantity, price, itemType) values (?, ?, ?,'Flower')", [name, availableQuantity, price], function (err, rows, fields) {
+      // connection.end();
+      if (!err) {
+        res.send(rows);
+        // console.log(rows);
+      } else {
+        console.log(err);
+      }
+    });
+  })
+  .patch(function (req, res) {
+    var name = req.body.name;
+    var price = req.body.price;
+    var availableQuantity = req.body.availableQuantity;
+    var itemId = req.body.itemId;
+    var type = req.body.type;
+    console.log(req.body);
+    
+    connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ?, itemType = ? where itemId = ?", [name, availableQuantity, price,type, itemId], function (err, rows, fields) {
+      // connection.end();
+      if (!err) {
+        res.send(rows);
+        // console.log(rows);
+      } else {
+        console.log(err);
+      }
+    });
   })
 
   module.exports = router;
