@@ -10,7 +10,6 @@ router.route('/invoice')
       if (!err) {
         res.send(rows);
         // console.log(rows);
-        return rows;
       } else {
         console.log(err);
       }
@@ -18,16 +17,41 @@ router.route('/invoice')
   })
   // create Invoice
   .post((req, res) => {
-    // console.log(req.body);
-    connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator, createReceiptDate) values (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.customerId, req.body.sellItemId, req.body.quotationId, req.body.userId, req.body.companyId, req.body.status, req.body.email, req.body.createReceiptDate], (err, rows, fields) => {
-      // connection.end();
-      if (!err) {
-        res.send(rows);
-        // console.log(rows);c
-      } else {
-        console.log(err);
+    // console.log(req.body.check.itemType);
+    // var _qId = req.body.items.split(',');
+    // console.log(_qId);
+    let item;
+    connection.query("select * from erp.Items where itemType = ?", [req.body.check.itemType], (err, val, fields) => {
+      // if(req.body.check)
+      // console.log(val);
+
+      item = val;
+      for (let i = 0; i < item.length; i++) {
+        // const element = item[i];
+        console.log('------- item --------');
+        console.log(item[i].itemId);
+        console.log('------- body --------');
+        console.log(req.body.check.itemId[i]);
+        
+        if (item[i].itemId == req.body.check.itemId[i]) {
+          console.log('------');
+          console.log(item[i]);
+
+        }
+
       }
-    });
+
+    })
+
+    // connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator, createReceiptDate) values (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.customerId, req.body.sellItemId, req.body.quotationId, req.body.userId, req.body.companyId, req.body.status, req.body.email, req.body.createReceiptDate], (err, rows, fields) => {
+    //   // connection.end();
+    //   if (!err) {
+    //     res.send(rows);
+    //     // console.log(rows);c
+    //   } else {
+    //     console.log(err);
+    //   }
+    // });
   })
   .patch((req, res) => {
     connection.query('update erp.Invoices set invoiceStatus = "canceled" where invoiceId = ?', [req.body.invoiceId], (err, rows, fields) => {
@@ -57,7 +81,7 @@ router.route('/invoiceGroup')
     })
   })
   .post((req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     // req.body.data.subInvoices
     connection.query('insert into erp.InvoiceGroup (groupName, invoiceId, invoiceGroupStatus) values (?, ?, ?)', [req.body.data.name, req.body.invoiceId, req.body.data.status], (err, rows, fields) => {
       if (!err) {
