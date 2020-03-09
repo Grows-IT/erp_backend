@@ -38,7 +38,7 @@ router.route('/items')
     var itemId = req.body.itemId;
     var type = req.body.type;
     console.log(req.body);
-    
+
     connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ?, itemType = ? where itemId = ?", [name, availableQuantity, price, type, itemId], function (err, rows, fields) {
       // connection.end();
       if (!err) {
@@ -63,32 +63,32 @@ router.route('/deleteitem')
       }
     });
   })
-  router.route('/sellItem')
-    .get(function (req,res){      
-      var itemId = req.body.itemId;    
-      connection.query("select * from erp.SellItems", function (err, rows, fields) {
-          // connection.end();
-          if (!err) {
-            res.send(rows);
-            console.log(rows);
-          } else {
-            console.log(err);
-          }
-        });
+router.route('/sellItem')
+  .get(function (req, res) {
+    var itemId = req.body.itemId;
+    connection.query("select * from erp.SellItems", function (err, rows, fields) {
+      // connection.end();
+      if (!err) {
+        res.send(rows);
+        console.log(rows);
+      } else {
+        console.log(err);
+      }
+    });
   })
 
-  router.route('/flower')
-    .get(function (req,res){      
-      var itemId = req.body.itemId;    
-      connection.query("select * from erp.Items where Items.itemType = 'Flower'", function (err, rows, fields) {
-          // connection.end();
-          if (!err) {
-            res.send(rows);
-            console.log(rows);
-          } else {
-            console.log(err);
-          }
-        });
+router.route('/flower')
+  .get(function (req, res) {
+    var itemId = req.body.itemId;
+    connection.query("select * from erp.Items where Items.itemType = 'Flower'", function (err, rows, fields) {
+      // connection.end();
+      if (!err) {
+        res.send(rows);
+        console.log(rows);
+      } else {
+        console.log(err);
+      }
+    });
   })
   .post(function (req, res) {
     var name = req.body.name;
@@ -111,8 +111,8 @@ router.route('/deleteitem')
     var itemId = req.body.itemId;
     var type = req.body.type;
     console.log(req.body);
-    
-    connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ?, itemType = ? where itemId = ?", [name, availableQuantity, price,type, itemId], function (err, rows, fields) {
+
+    connection.query("update erp.Items set itemName = ?, availableQuantity = ?, price = ?, itemType = ? where itemId = ?", [name, availableQuantity, price, type, itemId], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);
@@ -123,4 +123,4 @@ router.route('/deleteitem')
     });
   })
 
-  module.exports = router;
+module.exports = router;

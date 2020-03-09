@@ -29,12 +29,12 @@ router.route('/user')
     var company = req.body.company;
     var department = req.body.department;
     var position = req.body.position;
-    connection.query('select erp.Permission.roleId from erp.Permission where role = ?', [role], (err, val, fields) => {    
+    connection.query('select erp.Permission.roleId from erp.Permission where role = ?', [role], (err, val, fields) => {
       roleId = val[0];
 
       connection.query('select erp.Company.companyId from erp.Company where companyName = ?', [company], (err, val1, fields) => {
         console.log(val1);
-        
+
         comId = val1[0];
 
         connection.query('select erp.Department.departmentId from erp.Department where department = ?', [department], (err, val2, fields) => {
@@ -42,7 +42,7 @@ router.route('/user')
           deId = val2[0];
 
           connection.query('insert into erp.User (companyId,name,email,roleId,userStatus,departmentId,password,position) values (?, ?, ?, ?, ?, ?, ?,?)',
-            [comId.companyId, name, email, roleId.roleId, status,deId.departmentId,password,position]);
+            [comId.companyId, name, email, roleId.roleId, status, deId.departmentId, password, position]);
         })
       })
     })
@@ -63,8 +63,8 @@ router.route('/user')
         console.log(val1);
         deId = val1[0];
 
-      connection.query('update erp.User set roleId = ?, userStatus = ?, name = ?,email = ?,departmentId = ?, position = ? where User.userId = ?',
-        [roleId.roleId, status,name,email,deId.departmentId,position, id]);
+        connection.query('update erp.User set roleId = ?, userStatus = ?, name = ?,email = ?,departmentId = ?, position = ? where User.userId = ?',
+          [roleId.roleId, status, name, email, deId.departmentId, position, id]);
       })
     })
   })

@@ -16,42 +16,33 @@ router.route('/invoice')
     })
   })
   // create Invoice
-  .post((req, res) => {
-    // console.log(req.body.check.itemType);
-    // var _qId = req.body.items.split(',');
-    // console.log(_qId);
+  .post((req, res, next) => {
+    // console.log(req.body);
     let item;
-    connection.query("select * from erp.Items where itemType = ?", [req.body.check.itemType], (err, val, fields) => {
-      // if(req.body.check)
-      // console.log(val);
+    let isOverQuantity = false;
+    connection.query("select * from erp.Items where itemType = ?", [req.body.check.itemType], (err1, val1, fields1) => {
+      item = val1;
 
-      item = val;
-      for (let i = 0; i < item.length; i++) {
-        // const element = item[i];
-        console.log('------- item --------');
-        console.log(item[i].itemId);
-        console.log('------- body --------');
-        console.log(req.body.check.itemId[i]);
-        
-        if (item[i].itemId == req.body.check.itemId[i]) {
-          console.log('------');
-          console.log(item[i]);
-
+      for (let i = 0; i < req.body.check.itemId.length; i++) {
+        for (let j = 0; j < item.length; j++) {
+          if (item[j].itemId == req.body.check.itemId[i] && item[j].availableQuantity < req.body.check.itemQuantity[i]) {
+            isOverQuantity = true;
+          }
         }
-
       }
 
-    })
-
-    // connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator, createReceiptDate) values (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.customerId, req.body.sellItemId, req.body.quotationId, req.body.userId, req.body.companyId, req.body.status, req.body.email, req.body.createReceiptDate], (err, rows, fields) => {
-    //   // connection.end();
-    //   if (!err) {
-    //     res.send(rows);
-    //     // console.log(rows);c
-    //   } else {
-    //     console.log(err);
-    //   }
-    // });
+      if (!isOverQuantity) {
+        connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator, createReceiptDate) values (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.data.customerId, req.body.data.sellItemId, req.body.data.quotationId, req.body.data.userId, req.body.data.companyId, req.body.data.status, req.body.data.email, req.body.data.createReceiptDate], (err2, val2, fields2) => {
+          if (!err2) {
+            res.send(val2);
+          } else {
+            console.log(err2);
+          }
+        });
+      } else {
+        res.send({ err: 'จำนวนสินค้าไม่ถูกต้อง กรุณาเช็คจำนวนสินค้าใหม่อีกครั้ง' });
+      }
+    });
   })
   .patch((req, res) => {
     connection.query('update erp.Invoices set invoiceStatus = "canceled" where invoiceId = ?', [req.body.invoiceId], (err, rows, fields) => {
