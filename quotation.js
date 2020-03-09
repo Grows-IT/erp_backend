@@ -33,7 +33,7 @@ router.route('/quotation')
 
       connection.query('update erp.Quotation set Quotation.customerId = ?, Quotation.date = ?, Quotation.expirationDate = ? where Quotation.quotationId = ?',
         [req.body.customerId, req.body.date, req.body.expirationDate, req.body.quotationId], function (err, rows, fields) {
-          // connection.end();
+
           if (!err) {
             res.send(rows);
             console.log(rows);
@@ -42,37 +42,28 @@ router.route('/quotation')
           }
         })
     })
-    // connection.query("update erp.Quotation set Quotation.customerId = ?, Quotation.sellItemId = ?, Quotation.date = ?, Quotation.expirationDate = ?, where quotationId = ?", [req.body.customerId, req.body.sellItemId, req.body.date, req.body.expirationDate, req.body.quotationId], function (err, rows, fields) {
-    //   // connection.end();
-    //   if (!err) {
-    //     res.send(rows);
-    //     console.log(rows);
-    //   } else {
-    //     console.log(err);
-    //   }
-    // });
   })
 
 router.route('/deletequotation')
   .patch(function (req, res) {
+    console.log(req.body);
+
     var id = req.body.quotationId;
+    var invoiceId = req.body.invoiceId;
+
     connection.query("update erp.Quotation set Quotation.quotationStatus = 'canceled' where quotationId = ?", [id], (err, rows, fields) => {
-      // connection.end();
-      if (!err) {
-        res.send(rows);
-        console.log(rows);
-      } else {
-        console.log(err);
-      }
+      connection.query('update erp.Invoices set invoiceStatus = "canceled" where invoiceId = ?', [invoiceId], (err2, rows2, fields2) => {
+        if (!err2) {
+          res.send(rows2);
+        } else {
+          console.log(err2);
+        }
+      })
     });
   })
 
 router.route('/updateQuotation')
   .patch((req, res) => {
-    // console.log('update q');
-
-    // console.log(req.body);
-
     connection.query("update erp.Quotation set Quotation.invoiceId = ? where quotationId = ?", [req.body.invoiceId, req.body.quotationId], (err, rows, fields) => {
       if (!err) {
         res.send(rows);

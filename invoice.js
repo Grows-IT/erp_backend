@@ -16,9 +16,10 @@ router.route('/invoice')
       }
     })
   })
+  // create Invoice
   .post((req, res) => {
     // console.log(req.body);
-    connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator, createReceiptDate values (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.customerId, req.body.sellItemId, req.body.quotationId, req.body.userId, req.body.companyId, req.body.status, req.body.email, req.body.createReceiptDate], (err, rows, fields) => {
+    connection.query('insert into erp.Invoices(customerId, sellItemId, quotationId, userId, companyId, invoiceStatus, creator, createReceiptDate) values (?, ?, ?, ?, ?, ?, ?, ?)', [req.body.customerId, req.body.sellItemId, req.body.quotationId, req.body.userId, req.body.companyId, req.body.status, req.body.email, req.body.createReceiptDate], (err, rows, fields) => {
       // connection.end();
       if (!err) {
         res.send(rows);
@@ -29,10 +30,19 @@ router.route('/invoice')
     });
   })
   .patch((req, res) => {
-    // connection.query('select * from erp.Quotation q where q.invoiceId = ? and q.quotationId = ?', [req.body.invoiceId, req.body.quotationId], (err, rows, fields) => {
-    // connection.end();
     connection.query('update erp.Invoices set invoiceStatus = "canceled" where invoiceId = ?', [req.body.invoiceId], (err, rows, fields) => {
-      connection.query('update erp.Quotation set invoiceId = "0" where quotationId = ?', [req.body.quotationId]);
+      if (!err) {
+        res.send(rows);
+        connection.query('update erp.Quotation set invoiceId = "0" where quotationId = ?', [req.body.quotationId]), (err2, rows2, field2) => {
+          if (!err2) {
+            res.send(rows2);
+          } else {
+            console.log(err2);
+          }
+        }
+      } else {
+        console.log(err)
+      }
     });
   });
 
@@ -146,6 +156,17 @@ router.route('/getItems')
 router.route('/getRole')
   .get((req, res) => {
     connection.query('select p.role from erp.User u, erp.Permission p where u.email = ? and p.roleId = u.roleId', [req.query.email], (err, rows, fields) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log(err);
+      }
+    })
+  })
+
+router.route('/addReceipt')
+  .post((req, res) => {
+    connection.query('update erp.Invoices set createReceiptDate = ? where invoiceId = ?', [req.body.createReceiptDate, req.body.invId], (err, rows, fields) => {
       if (!err) {
         res.send(rows);
       } else {
