@@ -56,19 +56,21 @@ router.route('/addQuotation')
       if (err) {
         console.log(err);
         return;
+      } else {
+        sellItemId = val.insertId;
+
+        connection.query('select userId, companyId from erp.User where email = ?', [req.body.email], (err2, val2, fields2) => {
+          if (err2) {
+            console.log(err2);
+            return;
+          } else {
+            user = val2[0];
+
+            connection.query('insert into erp.Quotation (customerId, sellItemId, invoiceId, userId, companyId, date, expirationDate, quotationStatus, creator) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [req.body.customerId, sellItemId, req.body.invoiceId, user.userId, user.companyId, new Date(req.body.date), new Date(req.body.expirationDate), req.body.status, req.body.email]);
+          }
+        })
       }
-      sellItemId = val.insertId;
-
-      connection.query('select userId, companyId from erp.User where email = ?', [req.body.email], (err2, val2, fields2) => {
-        if (err2) {
-          console.log(err2);
-          return;
-        }
-        user = val2[0];
-
-        connection.query('insert into erp.Quotation (customerId, sellItemId, invoiceId, userId, companyId, date, expirationDate, quotationStatus, creator) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [req.body.customerId, sellItemId, req.body.invoiceId, user.userId, user.companyId, new Date(req.body.date), new Date(req.body.expirationDate), req.body.status, req.body.email]);
-      })
     })
   })
 
