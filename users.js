@@ -10,7 +10,7 @@ router.route('/user')
       // connection.end();
       if (!err) {
         res.send(rows)
-        console.log(rows);
+        // console.log(rows);
         return rows;
       } else {
         console.log(err);
