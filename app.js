@@ -5,10 +5,13 @@ var mysqlAdmin = require('node-mysql-admin');
 var customer = require('./customer');
 var invoice = require('./invoice');
 var signin = require('./signin')
+var supplier = require('./supplier')
 var quotation = require('./quotation')
 var items = require('./items');
 var users = require('./users');
 var department = require('./department');
+var supplieritem = require('./supplieritem');
+var pr = require('./PR');
 
 var router = express.Router();
 var Koa = require('koa');
@@ -68,6 +71,7 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(supplier);
 app.use(invoice);
 app.use(customer);
 app.use(signin);
@@ -75,6 +79,9 @@ app.use(quotation);
 app.use(items);
 app.use(users);
 app.use(department);
+app.use(supplieritem);
+app.use(pr);
+
 
 app.get('/quotationCount', function (req, res, next) {
     connection.query('select * from erp.Quotation', (err, rows, fields) => {
