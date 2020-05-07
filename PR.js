@@ -22,7 +22,7 @@ router.route('/pr')
     connection.query('insert into erp.PurchaseItem (SiId, quantity, shippingCost, POid) values (?, ?, ?, ?)', [req.body.items.SiId, req.body.items.quantity, req.body.shippingCost, req.body.POid], (err, val, fields) => {
       console.log(req.body);
       console.log(val);
-      
+
 
       PurchaseItemId = val.insertId;
 
@@ -33,54 +33,54 @@ router.route('/pr')
           [req.body.POid, sp.supplierId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.approvedBy, new Date().getDate(), req.body.approvedDate, req.body.DeliveryAddress], (err2, val3, fields2) => {
             // prid = val3.insertId;
             // console.log(val3);
-            
+
             // connection.query('insert into erp.PurchaseItem (PRid) values (?)', [prid]);
 
-            })
           })
       })
     })
+  })
 
-    router.route('/deletepr')
-      .post(function (req, res) {
-        var prId = req.body.prId;
-        connection.query("delete from erp.PR where PRid = ?", [prId], function (err, rows, fields) {
-          // connection.end();
-          if (!err) {
-            res.send(rows);
-            console.log(rows);
-          } else {
-            console.log(err);
-          }
-        });
-      })
+router.route('/deletepr')
+  .post(function (req, res) {
+    var prId = req.body.prId;
+    connection.query("delete from erp.PR where PRid = ?", [prId], function (err, rows, fields) {
+      // connection.end();
+      if (!err) {
+        res.send(rows);
+        console.log(rows);
+      } else {
+        console.log(err);
+      }
+    });
+  })
 
-    router.route('/purchaseitem')
-      .get(function (req, res) {
-        connection.query("select * from erp.PurchaseItem", (err, rows, fields) => {
-          // connection.end();
-          if (!err) {
-            res.send(rows)
-            // console.log(rows);
-            return rows;
-          } else {
-            console.log(err);
-          }
-        });
-      })
+router.route('/purchaseitem')
+  .get(function (req, res) {
+    connection.query("select * from erp.PurchaseItem", (err, rows, fields) => {
+      // connection.end();
+      if (!err) {
+        res.send(rows)
+        // console.log(rows);
+        return rows;
+      } else {
+        console.log(err);
+      }
+    });
+  })
 
-    router.route('/updatestatuspr')
-      .patch(function (req, res) {
-        connection.query("update erp.PR set Status = ? where PRid = ?", [req.body.status, req.body.PRid], (err, rows, fields) => {
-          // connection.end();
-          if (!err) {
-            res.send(rows)
-            // console.log(rows);
-            return rows;
-          } else {
-            console.log(err);
-          }
-        });
-      })
+router.route('/updatestatuspr')
+  .patch(function (req, res) {
+    connection.query("update erp.PR set Status = ? where PRid = ?", [req.body.status, req.body.PRid], (err, rows, fields) => {
+      // connection.end();
+      if (!err) {
+        res.send(rows)
+        // console.log(rows);
+        return rows;
+      } else {
+        console.log(err);
+      }
+    });
+  })
 
-    module.exports = router;
+module.exports = router;

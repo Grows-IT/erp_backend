@@ -12,6 +12,7 @@ var users = require('./users');
 var department = require('./department');
 var supplieritem = require('./supplieritem');
 var pr = require('./PR');
+var po = require('./PO')
 
 var router = express.Router();
 var Koa = require('koa');
@@ -81,6 +82,7 @@ app.use(users);
 app.use(department);
 app.use(supplieritem);
 app.use(pr);
+app.use(po);
 
 
 app.get('/quotationCount', function (req, res, next) {
