@@ -17,7 +17,7 @@ router.route('/supplier')
     });
   })
   .post(function (req, res) {
-    connection.query("insert into erp.Supplier (type, name, contactPerson, address, taxId) values (?, ?, ?, ?, ?)", [req.body.type, req.body.name, req.body.address, req.body.contactPerson, req.body.taxId], function (err, rows, fields) {
+    connection.query("insert into erp.Supplier (name, contactPerson, address, taxId) values (?, ?, ?, ?)", [req.body.name, req.body.address, req.body.contactPerson, req.body.taxId], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);
@@ -30,7 +30,7 @@ router.route('/supplier')
   .patch(function (req, res) {
     console.log(req.body.taxId);
     
-    connection.query("update erp.Supplier set type = ?,name = ?, contactPerson = ?, address = ?, taxId = ? where supplierId = ?", [req.body.type, req.body.name, req.body.address, req.body.contactPerson, req.body.taxId, req.body.supplierId], function (err, rows, fields) {
+    connection.query("update erp.Supplier set name = ?, contactPerson = ?, address = ?, taxId = ? where supplierId = ?", [req.body.name, req.body.address, req.body.contactPerson, req.body.taxId, req.body.supplierId], function (err, rows, fields) {
       // connection.end();
       if (!err) {
         res.send(rows);

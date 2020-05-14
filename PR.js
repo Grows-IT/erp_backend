@@ -6,6 +6,9 @@ const router = express.Router();
 router.route('/pr')
   .get(function (req, res) {
     connection.query("select * from erp.PR", (err, rows, fields) => {
+      console.log('get pr');
+      // console.log(fields);
+
       // connection.end();
       if (!err) {
         res.send(rows)
@@ -20,24 +23,18 @@ router.route('/pr')
     let PurchaseItemId;
     let sp;
     connection.query('insert into erp.PurchaseItem (SiId, quantity, shippingCost, POid) values (?, ?, ?, ?)', [req.body.items.SiId, req.body.items.quantity, req.body.shippingCost, req.body.POid], (err, val, fields) => {
-      console.log(req.body);
-      console.log(val);
-
-
       PurchaseItemId = val.insertId;
+      if (!err) {
+        connection.query('select sId from erp.Supplier where name = ?', [req.body.spName], (err2, val2, fields2) => {
+          sp = val2[0];
 
-      connection.query('select supplierId from erp.Supplier where name = ?', [req.body.spName], (err2, val2, fields2) => {
-        sp = val2[0];
-
-        connection.query('insert into erp.PR (POid, supplierId, PiId, PRName, Status, AdditionalNotePR, createdBy, approvedBy,  CreatedDate, ApprovedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [req.body.POid, sp.supplierId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.approvedBy, new Date().getDate(), req.body.approvedDate, req.body.DeliveryAddress], (err2, val3, fields2) => {
-            // prid = val3.insertId;
-            // console.log(val3);
-
-            // connection.query('insert into erp.PurchaseItem (PRid) values (?)', [prid]);
-
-          })
-      })
+          if (!err2) {
+            connection.query('insert into erp.PR (sId, PiId, PRName, Status, createdBy, approvedBy, CreatedDate, ApprovedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.createdBy, req.body.approvedBy, new Date(), req.body.approvedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
+              })
+          }
+        })
+      }
     })
   })
 
