@@ -6,7 +6,6 @@ const router = express.Router();
 router.route('/pr')
   .get(function (req, res) {
     connection.query("select * from erp.PR", (err, rows, fields) => {
-      console.log('get pr');
       // console.log(fields);
 
       // connection.end();
@@ -27,10 +26,12 @@ router.route('/pr')
       if (!err) {
         connection.query('select sId from erp.Supplier where name = ?', [req.body.spName], (err2, val2, fields2) => {
           sp = val2[0];
-
           if (!err2) {
-            connection.query('insert into erp.PR (sId, PiId, PRName, Status, createdBy, approvedBy, CreatedDate, ApprovedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.createdBy, req.body.approvedBy, new Date(), req.body.approvedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
+            console.log(req.body);
+            connection.query('insert into erp.PR (sId, PiId, PRName, Status, AdditionalNotePR, createdBy, approvedBy, CreatedDate, ApprovedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.approvedBy, new Date(), req.body.approvedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
+
+
               })
           }
         })
