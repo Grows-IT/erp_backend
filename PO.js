@@ -20,7 +20,7 @@ router.route('/po')
 router.route('/createpo')
 .post(function (req, res) {
   // console.log(req.body);
-  connection.query("insert into erp.PO (PRId, SId, PRName, createdDate, status) values(?,?,?,?,?)", [req.body.PRid, req.body.SId, req.body.prName, new Date().getDate(), req.body.status], function (err, val, fields) {
+  connection.query("insert into erp.PO (PRId, SId, PRName, createdDate, status) values(?,?,?,?,?)", [req.body.PRid, req.body.SId, req.body.prName, new Date(), req.body.status], function (err, val, fields) {
     // POid = val.insertId;
     console.log(val);
     
