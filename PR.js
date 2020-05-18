@@ -21,20 +21,26 @@ router.route('/pr')
   .post((req, res) => {
     let PurchaseItemId;
     let sp;
+    // console.log(req.body.items);
     connection.query('insert into erp.PurchaseItem (SiId, quantity, shippingCost, POid) values (?, ?, ?, ?)', [req.body.items.SiId, req.body.items.quantity, req.body.shippingCost, req.body.POid], (err, val, fields) => {
       PurchaseItemId = val.insertId;
       if (!err) {
         connection.query('select sId from erp.Supplier where name = ?', [req.body.spName], (err2, val2, fields2) => {
           sp = val2[0];
           if (!err2) {
-            console.log(req.body);
-            connection.query('insert into erp.PR (sId, PiId, PRName, Status, AdditionalNotePR, createdBy, approvedBy, CreatedDate, ApprovedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.approvedBy, new Date(), req.body.approvedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
-
-
+            // console.log(req.body);
+            connection.query('insert into erp.PR (sId, PiId, PRName, Status, AdditionalNotePR, createdBy, checkedBy, CreatedDate, CheckedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.checkedBy, new Date(), req.body.checkedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
+                if (err3) {
+                  console.log("error3 : " + err3);
+                }
               })
+          } else {
+            console.log("error2: " + err2);
           }
         })
+      } else {
+        console.log("error1: " + err);
       }
     })
   })
