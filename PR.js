@@ -74,12 +74,17 @@ router.route('/purchaseitem')
   })
 
 router.route('/updatestatuspr')
+
   .patch(function (req, res) {
-    connection.query("update erp.PR set Status = ? where PRid = ?", [req.body.status, req.body.PRid], (err, rows, fields) => {
+    console.log(req.body);
+    
+    connection.query("update erp.PR set Status = ?, checkedBy = ? where PRId = ?", [req.body.status, req.body.checkedBy, req.body.PRid], (err, rows, fields) => {
+      console.log(req.body);
+      
       // connection.end();
       if (!err) {
         res.send(rows)
-        // console.log(rows);
+        console.log(rows);
         return rows;
       } else {
         console.log(err);
