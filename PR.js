@@ -28,8 +28,8 @@ router.route('/pr')
           sp = val2[0];
           if (!err2) {
             console.log(req.body);
-            connection.query('insert into erp.PR (sId, PiId, PRName, Status, AdditionalNotePR, createdBy, approvedBy, CreatedDate, ApprovedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.approvedBy, new Date(), req.body.approvedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
+            connection.query('insert into erp.PR (sId, PiId, PRName, Status, AdditionalNotePR, createdBy, checkedBy, CreatedDate, CheckedDate, DeliveryAddress) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [sp.sId, PurchaseItemId, req.body.prName, req.body.status, req.body.addiNote, req.body.createdBy, req.body.checkedBy, new Date(), req.body.checkedDate, req.body.DeliveryAddress], (err3, val3, fields3) => {
 
 
               })
@@ -68,12 +68,17 @@ router.route('/purchaseitem')
   })
 
 router.route('/updatestatuspr')
+
   .patch(function (req, res) {
-    connection.query("update erp.PR set Status = ? where PRid = ?", [req.body.status, req.body.PRid], (err, rows, fields) => {
+    console.log(req.body);
+    
+    connection.query("update erp.PR set Status = ?, checkedBy = ? where PRId = ?", [req.body.status, req.body.checkedBy, req.body.PRid], (err, rows, fields) => {
+      console.log(req.body);
+      
       // connection.end();
       if (!err) {
         res.send(rows)
-        // console.log(rows);
+        console.log(rows);
         return rows;
       } else {
         console.log(err);
