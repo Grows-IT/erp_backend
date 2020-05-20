@@ -18,22 +18,17 @@ router.route('/po')
   })
 
 router.route('/createpo')
-.post(function (req, res) {
-  // console.log(req.body);
-  connection.query("insert into erp.PO (PRId, SId, PRName, createdDate, status) values(?,?,?,?,?)", [req.body.PRid, req.body.SId, req.body.prName, new Date(), req.body.status], function (err, val, fields) {
-    // POid = val.insertId;
-    console.log(val);
-    
-    // connection.query('update erp.PR set POid = ?, ApprovedDate = ? where PRid = ?', [POid, new Date.getDate(), req.body.PRid], (err2, val2, fields2) => {
-    if (!err) {
-      res.send(val);
-      console.log(val);
-    } else {
-      console.log(err);
-    }
-  // });
-  });
-})
+  .post(function (req, res) {
+    connection.query("insert into erp.PO (PRId, SId, PRName, createdDate, status) values(?,?,?,?,?)", [req.body.PRid, req.body.SId, req.body.prName, new Date(), req.body.status], function (err, val, fields) {
+      if (!err) {
+        res.send(val);
+        // console.log(val);
+        return val;
+      } else {
+        console.log(err);
+      }
+    });
+  })
 
 router.route('/updatestatuspo')
   .patch(function (req, res) {

@@ -6,9 +6,6 @@ const router = express.Router();
 router.route('/pr')
   .get(function (req, res) {
     connection.query("select * from erp.PR", (err, rows, fields) => {
-      // console.log(fields);
-
-      // connection.end();
       if (!err) {
         res.send(rows)
         // console.log(rows);
@@ -17,6 +14,7 @@ router.route('/pr')
         console.log(err);
       }
     });
+    // connection.end();
   })
   .post((req, res) => {
     let PurchaseItemId;
@@ -41,6 +39,21 @@ router.route('/pr')
         })
       } else {
         console.log("error1: " + err);
+      }
+    })
+  })
+  .patch((req, res) => {
+    // console.log(req.body);
+    connection.query('update erp.PR set PR.PRName = ?, PR.SId = ?, PR.AdditionalNotePR = ?, PR.DeliveryAddress = ? where PR.PRid = ?', [req.body.prName, req.body.sId, req.body.addiNote, req.body.DeliveryAddress, req.body.PRid], (err, val, fields) => {
+      if (!err) {
+        connection.query('update erp.PurchaseItem set PurchaseItem.SiId = ?, PurchaseItem.quantity = ?, PurchaseItem.shippingCost = ? where PurchaseItem.PiId = ?', [req.body.items.SiId, req.body.items.quantity, req.body.shippingCost, req.body.piId], (err2, val2, fields2) => {
+          if (!err2) {
+            console.log(val2);
+            res.send(val2);
+          } else {
+            console.log(err2);
+          }
+        })
       }
     })
   })
@@ -73,18 +86,12 @@ router.route('/purchaseitem')
     });
   })
 
-router.route('/updatestatuspr')
-
-  .patch(function (req, res) {
-    console.log(req.body);
-    
-    connection.query("update erp.PR set Status = ?, checkedBy = ? where PRId = ?", [req.body.status, req.body.checkedBy, req.body.PRid], (err, rows, fields) => {
-      console.log(req.body);
-      
-      // connection.end();
+router.route('/updateStatusPr')
+  .patch((req, res) => {
+    connection.query("update erp.PR set PR.Status = ?, PR.checkedBy = ? where PR.PRId = ?", [req.body.status, req.body.checkedBy, req.body.PRid], (err, rows, fields) => {
       if (!err) {
         res.send(rows)
-        console.log(rows);
+        // console.log(rows);
         return rows;
       } else {
         console.log(err);
